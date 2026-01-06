@@ -1,36 +1,37 @@
 const Cost = require('../models/cost.model');
-const Report = require('../models/report.model');
 
-/*
--------------------------------------------------
-Computed Design Pattern:
-If a monthly report already exists, return it.
-Otherwise, compute it once, save it, and reuse it.
--------------------------------------------------
-*/
+const CATEGORIES = ['food', 'health', 'housing', 'sports', 'education'];
+
+function monthRange(year, month) {
+    // month is 1-12
+    const start = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
+    const end = new Date(Date.UTC(year, month, 1, 0, 0, 0)); // next month
+    return { start, end };
+}
+
 async function getMonthlyReport(userid, year, month) {
-    const existing = await Report.findOne({ userid, year, month });
-    if (existing) return existing;
+    const { start, end } = monthRange(year, month);
 
-    const costs = await Cost.find({ userid });
-    const categories = ['food', 'education', 'health', 'housing', 'sports'];
+    // pull only the relevant month's costs
+    const costs = await Cost.find({
+        userid,
+        createdAt: { $gte: start, $lt: end }
+    }).lean();
 
-    const grouped = categories.map(cat => ({
+    const grouped = CATEGORIES.map(cat => ({
         [cat]: costs
-            .filter(c =>
-                c.category === cat &&
-                c.createdAt.getFullYear() === year &&
-                c.createdAt.getMonth() + 1 === month
-            )
-            .map(c => ({
-                sum: c.sum,
-                description: c.description,
-                day: c.createdAt.getDate()
-            }))
+            .filter(c => (c.category || '').toLowerCase() === cat)
+            .map(c => {
+                const d = new Date(c.createdAt);
+                return {
+                    sum: c.sum,
+                    description: c.description,
+                    day: d.getUTCDate()
+                };
+            })
     }));
 
-    const report = await Report.create({ userid, year, month, costs: grouped });
-    return report;
+    return { userid, year, month, costs: grouped };
 }
 
 module.exports = { getMonthlyReport };

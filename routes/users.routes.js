@@ -2,14 +2,14 @@ const router = require('express').Router();
 const User = require('../models/user.model');
 const Cost = require('../models/cost.model');
 
-router.post('/add', async (req, res) => {
+/*router.post('/add', async (req, res) => {
     try {
         const user = await User.create(req.body);
         res.json(user);
     } catch (e) {
         res.status(400).json({ id: 1, message: e.message });
     }
-});
+});*/
 
 router.get('/users', async (req, res) => {
     res.json(await User.find());
