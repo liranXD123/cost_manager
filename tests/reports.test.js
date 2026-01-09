@@ -22,6 +22,8 @@ beforeEach(async () => {
 describe('Reports endpoint', () => {
     test('GET /api/report should return grouped monthly report', async () => {
         // Put costs in specific month/year so report finds them
+        // NOTE: We insert costs directly into MongoDB for testing.
+        // The API itself blocks adding costs with past dates by requirement.
         await Cost.create([
             {
                 description: 'choco',

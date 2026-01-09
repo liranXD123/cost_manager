@@ -2,7 +2,11 @@ const router = require('express').Router();
 const Log = require('../models/log.model');
 
 router.get('/logs', async (req, res) => {
-    res.json(await Log.find());
+    try {
+        return res.json(await Log.find());
+    } catch (e) {
+        return res.status(500).json({ id: 400, message: e.message });
+    }
 });
 
 module.exports = router;

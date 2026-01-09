@@ -1,37 +1,75 @@
 const Cost = require('../models/cost.model');
+const Report = require('../models/report.model');
+const User = require('../models/user.model');
+const CATEGORIES = ['food', 'education', 'health', 'housing', 'sports'];
 
-const CATEGORIES = ['food', 'health', 'housing', 'sports', 'education'];
+function isPastMonth(year, month) {
+    // month is 1..12
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
 
-function monthRange(year, month) {
-    // month is 1-12
-    const start = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
-    const end = new Date(Date.UTC(year, month, 1, 0, 0, 0)); // next month
-    return { start, end };
+    if (year < currentYear) return true;
+    if (year > currentYear) return false;
+    return month < currentMonth;
+}
+
+function buildReport(userid, year, month, costs) {
+    const groups = {};
+    for (const c of CATEGORIES) groups[c] = [];
+
+    for (const item of costs) {
+        const d = new Date(item.createdAt);
+        const day = d.getDate();
+
+        groups[item.category].push({
+            sum: Number(item.sum),
+            description: item.description,
+            day
+        });
+    }
+
+    // format required by spec (array of objects, one per category)
+    const costsArr = CATEGORIES.map(cat => ({ [cat]: groups[cat] }));
+
+    return {
+        userid,
+        year,
+        month,
+        costs: costsArr
+    };
 }
 
 async function getMonthlyReport(userid, year, month) {
-    const { start, end } = monthRange(year, month);
+    // Computed pattern: if requested month is in the past, cache the result
+    const past = isPastMonth(year, month);
+    const u = await User.findOne({ id: userid });
+    if (!u) {
+        const err = new Error('User not found');
+        err.statusCode = 404;
+        throw err;
+    }
+    if (past) {
+        const cached = await Report.findOne({ userid, year, month });
+        if (cached) return cached;
+    }
 
-    // pull only the relevant month's costs
+    const start = new Date(year, month - 1, 1, 0, 0, 0);
+    const end = new Date(year, month, 1, 0, 0, 0);
+
     const costs = await Cost.find({
         userid,
         createdAt: { $gte: start, $lt: end }
-    }).lean();
+    });
 
-    const grouped = CATEGORIES.map(cat => ({
-        [cat]: costs
-            .filter(c => (c.category || '').toLowerCase() === cat)
-            .map(c => {
-                const d = new Date(c.createdAt);
-                return {
-                    sum: c.sum,
-                    description: c.description,
-                    day: d.getUTCDate()
-                };
-            })
-    }));
+    const reportObject = buildReport(userid, year, month, costs);
 
-    return { userid, year, month, costs: grouped };
+    if (past) {
+        const saved = await Report.create(reportObject);
+        return saved;
+    }
+
+    return reportObject;
 }
 
 module.exports = { getMonthlyReport };

@@ -6,7 +6,6 @@ router.get('/report', async (req, res) => {
     const year = Number(req.query.year);
     const month = Number(req.query.month);
 
-    // ✅ VALIDATION (required by spec)
     if (
         isNaN(userid) ||
         isNaN(year) ||
@@ -24,7 +23,7 @@ router.get('/report', async (req, res) => {
         const report = await getMonthlyReport(userid, year, month);
         res.json(report);
     } catch (err) {
-        res.status(500).json({
+        res.status(err.statusCode || 500).json({
             id: 4,
             message: err.message
         });
