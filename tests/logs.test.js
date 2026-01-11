@@ -43,3 +43,4 @@ describe('Logs endpoint', () => {
         expect(logs[0].url).toBeTruthy();
     });
 });
+//testing logs

@@ -1,3 +1,20 @@
+/*
+    Computed Design Pattern:
+    ------------------------
+    The monthly report is an expensive operation that aggregates cost data
+    by user, month, and category.
+
+    When a report is requested for a past month, the system first checks
+    whether the report was already computed and saved in the database.
+    If a saved report exists, it is returned immediately.
+
+    If the report does not exist, it is computed from the costs collection,
+    saved in the reports collection, and then returned.
+
+    Reports for the current or future month are computed dynamically
+    and are not saved.
+*/
+
 const Cost = require('../models/cost.model');
 const Report = require('../models/report.model');
 const User = require('../models/user.model');

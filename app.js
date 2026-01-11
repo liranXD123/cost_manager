@@ -5,7 +5,7 @@ const loggerMiddleware = require('./services/logger.service');
 app.use(express.json());
 app.use(loggerMiddleware);
 
-app.use('/api', require('./routes/add.routes'));
+
 app.use('/api', require('./routes/users.routes'));
 app.use('/api', require('./routes/costs.routes'));
 app.use('/api', require('./routes/reports.routes'));

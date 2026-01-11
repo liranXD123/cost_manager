@@ -7,6 +7,6 @@ router.get('/logs', async (req, res) => {
     } catch (e) {
         return res.status(500).json({ id: 400, message: e.message });
     }
-});
+}); //getting logs of each action
 
 module.exports = router;

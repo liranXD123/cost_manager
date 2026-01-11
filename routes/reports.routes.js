@@ -28,6 +28,6 @@ router.get('/report', async (req, res) => {
             message: err.message
         });
     }
-});
+}); //getting the costs report of the user
 
 module.exports = router;

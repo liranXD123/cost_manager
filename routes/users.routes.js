@@ -40,7 +40,7 @@ router.get('/users', async (req, res) => {
     } catch (e) {
         return res.status(500).json({ id: 302, message: e.message });
     }
-});
+}); //getting users names
 
 router.get('/users/:id', async (req, res) => {
     try {
@@ -66,6 +66,6 @@ router.get('/users/:id', async (req, res) => {
     } catch (e) {
         return res.status(500).json({ id: 305, message: e.message });
     }
-});
+}); //getting user ID
 
 module.exports = router;

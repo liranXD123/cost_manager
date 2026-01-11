@@ -62,3 +62,4 @@ describe('Users endpoints', () => {
         expect(res.body).toHaveProperty('message');
     });
 });
+//testing users addition

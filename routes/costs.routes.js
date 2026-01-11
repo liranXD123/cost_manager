@@ -60,7 +60,7 @@ router.post('/add', async (req, res) => {
 
         return res.json(cost);
     } catch (e) {
-        return res.status(400).json({ id: 205, message: e.message });
+        return res.status(400).json({ id: 205, message: e.message }); //return status
     }
 });
 
