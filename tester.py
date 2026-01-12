@@ -13,13 +13,13 @@ filename = input("filename=")
 #The fourth will handle any admin-related tasks (e.g. developers details) (d)
 
 
-a = ""
+a = "https://logs-service-rloy.onrender.com"
 
-b = ""
+b = "https://users-service-ufro.onrender.com"
 
-c = ""
+c = "https://costs-service-oc2k.onrender.com"
 
-d = ""
+d = "https://admin-service-m0ct.onrender.com"
 
 
 output = open(filename,"w")

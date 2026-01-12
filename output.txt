@@ -1,2 +1,25 @@
+a=https://logs-service-rloy.onrender.com
+b=https://users-service-ufro.onrender.com
+c=https://costs-service-oc2k.onrender.com
+d=https://admin-service-m0ct.onrender.com
 
+testing getting the about
+-------------------------
+url=https://admin-service-m0ct.onrender.com/api/about/
+data.status_code=200
+b'[{"first_name":"Liran","last_name":"Cordova"},{"first_name":"Daniel","last_name":"Lev"}]'
+data.text=[{"first_name":"Liran","last_name":"Cordova"},{"first_name":"Daniel","last_name":"Lev"}]
+[{'first_name': 'Liran', 'last_name': 'Cordova'}, {'first_name': 'Daniel', 'last_name': 'Lev'}]
+url=https://costs-service-oc2k.onrender.com/api/report/?id=123123&year=2026&month=1
+data.status_code=200
+b'{"userid":123123,"year":2026,"month":1,"costs":[{"food":[]},{"education":[]},{"health":[]},{"housing":[]},{"sports":[]}]}'
+data.text={"userid":123123,"year":2026,"month":1,"costs":[{"food":[]},{"education":[]},{"health":[]},{"housing":[]},{"sports":[]}]}
+
+url=https://costs-service-oc2k.onrender.com/api/add/
+data.status_code=200
+b'{"description":"milk 9","category":"food","userid":123123,"sum":8,"createdAt":"2026-01-12T11:40:44.920Z","_id":"6964ddbc71e4c7c0566ae66f","__v":0}'
+url=https://costs-service-oc2k.onrender.com/api/report/?id=123123&year=2026&month=1
+data.status_code=200
+b'{"userid":123123,"year":2026,"month":1,"costs":[{"food":[{"sum":8,"description":"milk 9","day":12}]},{"education":[]},{"health":[]},{"housing":[]},{"sports":[]}]}'
+data.text={"userid":123123,"year":2026,"month":1,"costs":[{"food":[{"sum":8,"description":"milk 9","day":12}]},{"education":[]},{"health":[]},{"housing":[]},{"sports":[]}]}
 
